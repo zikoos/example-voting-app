@@ -1,0 +1,25 @@
+voting-app:
+  build: ./voting-app/.
+  ports:
+    - "5000:80"
+  links:
+    - redis
+redis:
+  image: hypriot/rpi-redis
+  ports: ["6379"]
+  links:
+    - worker
+worker:
+  build: ./worker
+  links:
+    - db
+db:
+  image: zsoltm/postgresql-armhf
+  volumes:
+    - "myvolume:/var/lib/postgresql/data"
+  links:
+    - result-app
+result-app:
+  build: ./result-app/.
+  ports:
+    - "5001:80"
